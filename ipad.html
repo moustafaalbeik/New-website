@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iPad – NexLap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #F4F3F2; margin: 0; }
+
+    nav {
+      background: #ffffff;
+      width: 100%;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      box-shadow: 0 1px 12px rgba(0,0,0,0.07);
+      position: relative;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; z-index: 1; }
+    .logo-icon { width: 38px; height: 38px; }
+    .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: #111; }
+    .nav-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 28px; }
+    .nav-center a { font-family: 'DM Sans', sans-serif; font-size: 17px; font-weight: 600; color: #111; letter-spacing: 0.5px; text-decoration: none; transition: color 0.2s; }
+    .nav-center a:hover { color: #00A1F4; }
+    .nav-center a.active { color: #00A1F4; }
+    .nav-right { display: flex; align-items: center; gap: 28px; z-index: 1; }
+    .nav-right .cart-btn { background: #111; color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; text-decoration: none; }
+
+    /* Hero */
+    .hero { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 80px 40px; text-align: center; color: #fff; }
+    .hero-label { font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: #00A1F4; margin-bottom: 16px; }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: 72px; letter-spacing: 2px; color: #fff; line-height: 1; margin-bottom: 16px; }
+    .hero-subtitle { font-size: 18px; color: #aac4e0; max-width: 520px; margin: 0 auto; line-height: 1.6; }
+
+    /* Text Section */
+    .text-section { display: flex; gap: 40px; padding: 32px 40px; background: #F4F3F2; }
+    .text-section a { text-decoration: none; font-size: 16px; color: #111; position: relative; padding-bottom: 4px; }
+    .text-section a.active { font-weight: 700; }
+    .text-section a.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: #0887ea; }
+    .text-section a.hover-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: #0887ea; transition: width 0.25s ease; }
+    .text-section a.hover-link:hover::after { width: 100%; }
+
+    /* Products */
+    .products-section { padding: 0 40px 40px 40px; display: flex; gap: 30px; flex-wrap: wrap; }
+    .product-box { background: #fff; border-radius: 16px; overflow: hidden; width: 240px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); transition: box-shadow 0.3s ease; }
+    .product-box:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.14); }
+    .product-box img { width: 200px; display: block; object-fit: cover; margin: 20px auto 10px; transition: transform 0.3s ease; }
+    .product-box:hover img { transform: scale(1.1); }
+    .product-box .product-info { padding: 16px 18px 12px; }
+    .product-box .product-name { font-size: 15px; font-weight: 700; color: #111; margin-bottom: 6px; }
+    .product-box .product-desc { font-size: 13px; color: #666; line-height: 1.6; }
+    .product-box .product-price { font-size: 16px; font-weight: 700; color: #00A1F4; padding: 0 18px 12px; }
+    .product-box .add-to-cart { display: block; width: 100%; background: #00A1F4; color: #fff; text-align: center; padding: 12px 0; font-size: 14px; font-weight: 600; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; border-radius: 14px; transition: background 0.2s ease; }
+    .product-box .add-to-cart:hover { background: #006EF5; }
+    .product-box .button-wrapper { padding: 0 12px 16px 12px; }
+
+    /* Footer */
+    footer { background: #111; color: #fff; padding: 32px 40px; margin-top: 40px; text-align: center; }
+    .footer-heading { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 3px; color: #fff; margin-bottom: 16px; }
+    .footer-content { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; font-size: 13px; color: #ccc; }
+    .footer-content .divider { color: #444; }
+
+    /* ── Dark Mode overrides (light pages) ── */
+    [data-theme="dark"] body { background: #121212 !important; color: #e0e0e0 !important; }
+    [data-theme="dark"] nav { background: #1a1a1a !important; box-shadow: 0 1px 12px rgba(0,0,0,0.4) !important; }
+    [data-theme="dark"] .logo-text { color: #fff !important; }
+    [data-theme="dark"] .nav-center a { color: #ccc !important; }
+    [data-theme="dark"] .nav-center a:hover { color: #00A1F4 !important; }
+    [data-theme="dark"] .nav-right .cart-btn { background: #fff !important; color: #111 !important; }
+    [data-theme="dark"] .text-section { background: #121212 !important; }
+    [data-theme="dark"] .text-section a { color: #ccc !important; }
+    [data-theme="dark"] .product-box { background: #1e1e1e !important; box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important; }
+    [data-theme="dark"] .product-desc { color: #aaa !important; }
+    [data-theme="dark"] .product-name { color: #fff !important; }
+    [data-theme="dark"] .products-section { background: #121212; }
+    [data-theme="dark"] .banner { filter: brightness(0.85); }
+    [data-theme="dark"] footer { background: #0a0a0a !important; }
+    [data-theme="dark"] .footer-heading { color: #fff !important; }
+    [data-theme="dark"] .footer-content { color: #aaa !important; }
+    /* cart page dark */
+    [data-theme="dark"] .page-title { color: #fff !important; }
+    [data-theme="dark"] .cart-table { background: #1e1e1e !important; }
+    [data-theme="dark"] .cart-header { background: #2a2a2a !important; border-bottom-color: #333 !important; }
+    [data-theme="dark"] .cart-item { border-bottom-color: #2a2a2a !important; }
+    [data-theme="dark"] .product-cell img { background: #2a2a2a !important; }
+    [data-theme="dark"] .product-name { color: #fff !important; }
+    [data-theme="dark"] .price-cell { color: #fff !important; }
+    [data-theme="dark"] .qty-num { background: #1e1e1e !important; color: #fff !important; border-color: #444 !important; }
+    [data-theme="dark"] .qty-btn { background: #1e1e1e !important; color: #ccc !important; border-color: #444 !important; }
+    [data-theme="dark"] .summary { background: #1e1e1e !important; }
+    [data-theme="dark"] .summary-total { color: #fff !important; }
+    [data-theme="dark"] .page { background: #121212; }
+    [data-theme="dark"] .empty-msg { color: #666 !important; }
+
+    /* ── Theme Toggle Button ── */
+    #theme-toggle {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 22px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+      background: #fff;
+      color: #111;
+    }
+    [data-theme="dark"] #theme-toggle {
+      background: #222;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    #theme-toggle:hover { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">
+      <svg class="logo-icon" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="38" height="38" rx="10" fill="#111"/>
+        <path d="M19 8 C13 8 10 13 10 19 C10 25 13 30 19 30 C22 30 24 28 25 26 C26 28 27 30 30 30 L27 24 C28 22 28 20 28 19 C28 13 25 8 19 8Z" fill="white"/>
+        <circle cx="16" cy="18" r="2.2" fill="#111"/>
+        <circle cx="22" cy="18" r="2.2" fill="#111"/>
+      </svg>
+      <span class="logo-text">NEXLAP</span>
+    </a>
+    <div class="nav-center">
+      <a href="index.html">Mac</a>
+      <a href="ipad.html" class="active">iPad</a>
+      <a href="iphone.html">iPhone</a>
+      <a href="Watch.html">Watch</a>
+    </div>
+    <div class="nav-right">
+      <a href="cart.html" class="cart-btn">Cart</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="hero-label">New Collection</p>
+    <h1 class="hero-title">iPad</h1>
+    <p class="hero-subtitle">Incredibly thin. Impossibly powerful. Explore the full lineup of iPads built for every kind of user.</p>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="text-section">
+    <a href="#" class="active">New products</a>
+    <a href="#" class="hover-link">Special offers</a>
+  </div>
+
+  <!-- Products -->
+  <div class="products-section" id="products">
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$1,299</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot;" data-price="1299" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$999</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; 256GB" data-price="999" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$799</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; 128GB" data-price="799" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$599</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; 64GB" data-price="599" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$449</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; WiFi" data-price="449" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$499</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; Cellular" data-price="499" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$549</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; 512GB" data-price="549" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$649</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; 1TB" data-price="649" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$749</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; 2TB" data-price="749" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+    <div class="product-box">
+      <img src="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" alt="iPad">
+      <div class="product-info">
+        <p class="product-name">iPad Pro 11"</p>
+        <p class="product-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <p class="product-price">$849</p>
+      <div class="button-wrapper"><button class="add-to-cart" data-name="iPad Pro 11&quot; Pro Max" data-price="849" data-img="/Users/moustafaalbeik/Documents/NexLap/images/ipad-1.jpg" onclick="addToCart(this)">Add to cart</button></div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-heading">Get in touch</p>
+    <div class="footer-content">
+      <span>📧 info@nexlap.com</span>
+      <span class="divider">|</span>
+      <span>📱 +1 (800) 123-4567</span>
+      <span class="divider">|</span>
+      <span>📍 123 Tech Street, San Francisco, CA</span>
+      <span class="divider">|</span>
+      <span>© 2026 NexLap. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    function addToCart(btn) {
+      const name = btn.getAttribute('data-name');
+      const price = parseInt(btn.getAttribute('data-price'));
+      const img = btn.getAttribute('data-img');
+
+      let cart = JSON.parse(localStorage.getItem('nexlap-cart') || '[]');
+      const existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ name, price, img, qty: 1 });
+      }
+      localStorage.setItem('nexlap-cart', JSON.stringify(cart));
+
+      const original = btn.textContent;
+      btn.textContent = '✓ Added!';
+      btn.style.background = '#28a745';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+      }, 1000);
+    }
+  </script>
+
+
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+    <span id="theme-icon">🌙</span>
+  </button>
+
+  <script>
+    (function() {
+      const saved = localStorage.getItem('nexlap-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+    })();
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('nexlap-theme', next);
+      document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watch – NexLap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: #fff; color: #1d1d1f; }
+
+    /* Navbar */
+    nav {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      width: 100%;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 38px; height: 38px; }
+    .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: #1d1d1f; }
+    .nav-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 32px; }
+    .nav-center a { font-size: 15px; font-weight: 500; color: #666; text-decoration: none; letter-spacing: 0.3px; transition: color 0.2s; }
+    .nav-center a:hover { color: #1d1d1f; }
+    .nav-center a.active { color: #1d1d1f; font-weight: 700; }
+    .nav-right { z-index: 1; }
+    .cart-btn { background: #1d1d1f; color: #fff; padding: 8px 22px; border-radius: 999px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+    .cart-btn:hover { background: #444; }
+
+    /* Hero */
+    .hero {
+      background: #f5f5f7;
+      padding: 90px 40px 70px;
+      text-align: center;
+    }
+    .hero-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #6e6e73;
+      margin-bottom: 18px;
+    }
+    .hero-title {
+      font-size: 80px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -2px;
+      color: #1d1d1f;
+      margin-bottom: 16px;
+    }
+    .hero-sub {
+      font-size: 19px;
+      font-weight: 300;
+      color: #6e6e73;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* Filter tabs */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      padding: 32px 40px 24px;
+      background: #fff;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    .filter-btn {
+      padding: 8px 22px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid #d2d2d7;
+      background: transparent;
+      color: #6e6e73;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .filter-btn.active { background: #1d1d1f; color: #fff; border-color: #1d1d1f; }
+    .filter-btn:hover:not(.active) { border-color: #1d1d1f; color: #1d1d1f; }
+
+    /* Products Grid */
+    .products-section {
+      padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+      background: #fff;
+    }
+
+    .product-card {
+      background: #f5f5f7;
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.1);
+    }
+
+    .card-img-wrap {
+      background: #f5f5f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 20px 20px;
+      overflow: hidden;
+    }
+    .card-img-wrap img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+      transition: transform 0.35s ease;
+    }
+    .product-card:hover .card-img-wrap img { transform: scale(1.08); }
+
+    .card-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: #1d1d1f;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .card-badge.deal { background: #ff3b30; }
+
+    .card-body { padding: 16px 20px 8px; }
+    .card-name { font-size: 16px; font-weight: 700; color: #1d1d1f; margin-bottom: 6px; }
+    .card-desc { font-size: 13px; color: #6e6e73; line-height: 1.6; margin-bottom: 0; }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 20px;
+    }
+    .card-price { font-size: 20px; font-weight: 700; color: #1d1d1f; }
+
+    .add-to-cart {
+      background: #0071e3;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .add-to-cart:hover { background: #0077ed; transform: scale(1.04); }
+
+    /* Footer */
+    footer {
+      background: #f5f5f7;
+      border-top: 1px solid #e5e5e5;
+      padding: 36px 40px;
+      margin-top: 40px;
+      text-align: center;
+    }
+    .footer-heading {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1d1d1f;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #6e6e73;
+    }
+    .footer-content .divider { color: #d2d2d7; }
+
+    /* Dark mode */
+    [data-theme="dark"] body { background: #000 !important; color: #f5f5f7 !important; }
+    [data-theme="dark"] nav { background: rgba(0,0,0,0.85) !important; border-bottom-color: rgba(255,255,255,0.08) !important; }
+    [data-theme="dark"] .logo-text { color: #f5f5f7 !important; }
+    [data-theme="dark"] .nav-center a { color: #888 !important; }
+    [data-theme="dark"] .nav-center a:hover { color: #fff !important; }
+    [data-theme="dark"] .nav-center a.active { color: #fff !important; }
+    [data-theme="dark"] .cart-btn { background: #f5f5f7 !important; color: #000 !important; }
+    [data-theme="dark"] .hero { background: #111 !important; }
+    [data-theme="dark"] .hero-title { color: #f5f5f7 !important; }
+    [data-theme="dark"] .hero-sub { color: #888 !important; }
+    [data-theme="dark"] .hero-label { color: #888 !important; }
+    [data-theme="dark"] .filter-bar { background: #000 !important; border-bottom-color: #222 !important; }
+    [data-theme="dark"] .filter-btn { border-color: #333 !important; color: #888 !important; }
+    [data-theme="dark"] .filter-btn.active { background: #f5f5f7 !important; color: #000 !important; border-color: #f5f5f7 !important; }
+    [data-theme="dark"] .filter-btn:hover:not(.active) { border-color: #fff !important; color: #fff !important; }
+    [data-theme="dark"] .products-section { background: #000 !important; }
+    [data-theme="dark"] .product-card { background: #1c1c1e !important; }
+    [data-theme="dark"] .card-img-wrap { background: #1c1c1e !important; }
+    [data-theme="dark"] .card-name { color: #f5f5f7 !important; }
+    [data-theme="dark"] .card-desc { color: #888 !important; }
+    [data-theme="dark"] .card-price { color: #f5f5f7 !important; }
+    [data-theme="dark"] footer { background: #111 !important; border-top-color: #222 !important; }
+    [data-theme="dark"] .footer-heading { color: #f5f5f7 !important; }
+    [data-theme="dark"] .footer-content { color: #888 !important; }
+
+    /* Toggle button */
+    #theme-toggle {
+      position: fixed; bottom: 28px; right: 28px; width: 52px; height: 52px;
+      border-radius: 50%; border: none; cursor: pointer; font-size: 22px;
+      z-index: 9999; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15); transition: transform 0.2s;
+      background: #1d1d1f; color: #fff;
+    }
+    [data-theme="dark"] #theme-toggle { background: #f5f5f7; color: #000; }
+    #theme-toggle:hover { transform: scale(1.12); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">
+      <svg class="logo-icon" viewBox="0 0 38 38" fill="none">
+        <rect width="38" height="38" rx="10" fill="#111"/>
+        <path d="M19 8 C13 8 10 13 10 19 C10 25 13 30 19 30 C22 30 24 28 25 26 C26 28 27 30 30 30 L27 24 C28 22 28 20 28 19 C28 13 25 8 19 8Z" fill="white"/>
+        <circle cx="16" cy="18" r="2.2" fill="#111"/>
+        <circle cx="22" cy="18" r="2.2" fill="#111"/>
+      </svg>
+      <span class="logo-text">NEXLAP</span>
+    </a>
+    <div class="nav-center">
+      <a href="index.html">Mac</a>
+      <a href="ipad.html">iPad</a>
+      <a href="iphone.html">iPhone</a>
+      <a href="Watch.html" class="active">Watch</a>
+    </div>
+    <div class="nav-right">
+      <a href="cart.html" class="cart-btn">Cart</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <p class="hero-label">New Collection 2026</p>
+    <h1 class="hero-title">Apple Watch</h1>
+    <p class="hero-sub">The most personal device you wear. Now more powerful than ever.</p>
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-bar">
+    <button class="filter-btn active">New Products</button>
+    <button class="filter-btn">Special Offers</button>
+  </div>
+
+  <!-- Products -->
+  <div class="products-section">
+
+    <div class="product-card">
+      <div class="card-badge">New</div>
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch Ultra 2</p>
+        <p class="card-desc">Titanium case, precision dual-frequency GPS, 60-hour battery.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$799</span>
+        <button class="add-to-cart" data-name="Apple Watch Ultra 2" data-price="799" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge">New</div>
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch Series 10</p>
+        <p class="card-desc">Thinnest Apple Watch ever. Advanced health sensors, all-day battery.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$399</span>
+        <button class="add-to-cart" data-name="Apple Watch Series 10" data-price="399" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge">New</div>
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch Series 10 LTE</p>
+        <p class="card-desc">Stay connected independently. Cellular, GPS and crash detection.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$499</span>
+        <button class="add-to-cart" data-name="Apple Watch Series 10 LTE" data-price="499" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge">New</div>
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch SE 2nd Gen</p>
+        <p class="card-desc">Essential health features. Affordable Apple Watch experience.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$249</span>
+        <button class="add-to-cart" data-name="Apple Watch SE 2nd Gen" data-price="249" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch Series 9</p>
+        <p class="card-desc">Double tap gesture, brighter display and carbon neutral options.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$329</span>
+        <button class="add-to-cart" data-name="Apple Watch Series 9" data-price="329" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch Ultra 1</p>
+        <p class="card-desc">Built for extreme adventures. Action button, rugged titanium.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$699</span>
+        <button class="add-to-cart" data-name="Apple Watch Ultra 1" data-price="699" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge deal">Deal</div>
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch Series 8</p>
+        <p class="card-desc">Temperature sensor, crash detection, always-on retina display.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$279</span>
+        <button class="add-to-cart" data-name="Apple Watch Series 8" data-price="279" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge deal">Deal</div>
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch SE 1st Gen</p>
+        <p class="card-desc">Lightweight aluminium, family setup and emergency SOS.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$199</span>
+        <button class="add-to-cart" data-name="Apple Watch SE 1st Gen" data-price="199" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge deal">Deal</div>
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch Series 7</p>
+        <p class="card-desc">Largest display ever, faster charging, crack-resistant glass.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$229</span>
+        <button class="add-to-cart" data-name="Apple Watch Series 7" data-price="229" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge deal">Deal</div>
+      <div class="card-img-wrap"><img src="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" alt="Watch"></div>
+      <div class="card-body">
+        <p class="card-name">Apple Watch Series 6</p>
+        <p class="card-desc">Blood oxygen sensor, always-on altimeter, S6 chip performance.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$179</span>
+        <button class="add-to-cart" data-name="Apple Watch Series 6" data-price="179" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Watch-1.png" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-heading">Get in touch</p>
+    <div class="footer-content">
+      <span>📧 info@nexlap.com</span>
+      <span class="divider">|</span>
+      <span>📱 +1 (800) 123-4567</span>
+      <span class="divider">|</span>
+      <span>📍 123 Tech Street, San Francisco, CA</span>
+      <span class="divider">|</span>
+      <span>© 2026 NexLap. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+    <span id="theme-icon">🌙</span>
+  </button>
+
+  <script>
+    (function() {
+      const saved = localStorage.getItem('nexlap-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+    })();
+
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('nexlap-theme', next);
+      document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+
+    function addToCart(btn) {
+      const name = btn.getAttribute('data-name');
+      const price = parseInt(btn.getAttribute('data-price'));
+      const img = btn.getAttribute('data-img');
+      let cart = JSON.parse(localStorage.getItem('nexlap-cart') || '[]');
+      const existing = cart.find(item => item.name === name);
+      if (existing) { existing.qty += 1; }
+      else { cart.push({ name, price, img, qty: 1 }); }
+      localStorage.setItem('nexlap-cart', JSON.stringify(cart));
+      const original = btn.textContent;
+      btn.textContent = '✓ Added!';
+      btn.style.background = '#34c759';
+      setTimeout(() => { btn.textContent = original; btn.style.background = ''; }, 1000);
+    }
+  </script>
+
+</body>
+</html>

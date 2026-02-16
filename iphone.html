@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iPhone – NexLap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; }
+
+    /* Navbar */
+    nav {
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      width: 100%;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; z-index: 1; }
+    .logo-icon { width: 38px; height: 38px; }
+    .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: #fff; }
+
+    .nav-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 28px; }
+    .nav-center a { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6); letter-spacing: 0.5px; text-decoration: none; transition: color 0.2s; }
+    .nav-center a:hover { color: #fff; }
+    .nav-center a.active { color: #fff; font-weight: 700; }
+
+    .nav-right { z-index: 1; }
+    .cart-btn { background: rgba(255,255,255,0.1); color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.15); transition: background 0.2s; font-family: 'DM Sans', sans-serif; }
+    .cart-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* Hero */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 40px;
+      background: radial-gradient(ellipse at 50% 0%, #001a33 0%, #0a0a0a 65%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,120,255,0.15) 0%, transparent 70%);
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: linear-gradient(90deg, #0078ff, #00c8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: 96px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, #ffffff 40%, rgba(255,255,255,0.3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.5);
+      max-width: 480px;
+      line-height: 1.8;
+      margin-bottom: 0;
+    }
+
+    /* Filter bar */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      padding: 32px 40px;
+      background: #0a0a0a;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .filter-btn {
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active {
+      background: #fff;
+      color: #0a0a0a;
+      border-color: #fff;
+    }
+
+    .filter-btn:hover:not(.active) {
+      border-color: rgba(255,255,255,0.4);
+      color: #fff;
+    }
+
+    /* Products Grid */
+    .products-section {
+      padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 24px;
+      background: #0a0a0a;
+    }
+
+    .product-card {
+      background: #111;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(0,120,255,0.5);
+      box-shadow: 0 20px 60px rgba(0,120,255,0.15);
+    }
+
+    .card-img-wrap {
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+      overflow: hidden;
+    }
+
+    .card-img-wrap img {
+      width: 160px;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .card-img-wrap img {
+      transform: scale(1.1);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: linear-gradient(90deg, #0078ff, #00c8ff);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .card-body { padding: 20px; }
+
+    .card-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 20px;
+    }
+
+    .card-price {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #0078ff, #00c8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .add-to-cart {
+      background: linear-gradient(90deg, #0078ff, #00c8ff);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .add-to-cart:hover { opacity: 0.85; transform: scale(1.05); }
+
+    /* Footer */
+    footer {
+      background: #050505;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .footer-heading {
+      font-size: 28px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #0078ff, #00c8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: #ffffff;
+    }
+
+    .footer-content .divider { color: rgba(255,255,255,0.3); }
+
+    /* ── Light Mode (default) overrides for iPhone page ── */
+    html:not([data-theme="dark"]) body { background: #f5f5f7 !important; color: #111 !important; }
+    html:not([data-theme="dark"]) nav { background: rgba(245,245,247,0.92) !important; border-bottom: 1px solid rgba(0,0,0,0.08) !important; }
+    html:not([data-theme="dark"]) .logo-text { color: #111 !important; }
+    html:not([data-theme="dark"]) .nav-center a { color: rgba(0,0,0,0.5) !important; }
+    html:not([data-theme="dark"]) .nav-center a:hover { color: #111 !important; }
+    html:not([data-theme="dark"]) .nav-center a.active { color: #0078ff !important; font-weight: 700; }
+    html:not([data-theme="dark"]) .cart-btn { background: rgba(0,0,0,0.08) !important; color: #111 !important; border-color: rgba(0,0,0,0.15) !important; }
+    html:not([data-theme="dark"]) .hero { background: linear-gradient(135deg, #e8f0fe 0%, #f5f5f7 65%) !important; }
+    html:not([data-theme="dark"]) .hero::before { background: radial-gradient(circle, rgba(0,120,255,0.08) 0%, transparent 70%) !important; }
+    html:not([data-theme="dark"]) .hero-tag { background: linear-gradient(90deg, #0078ff, #00c8ff) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    html:not([data-theme="dark"]) .hero-title { background: linear-gradient(180deg, #111 40%, rgba(0,0,0,0.4) 100%) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    html:not([data-theme="dark"]) .hero-sub { color: rgba(0,0,0,0.45) !important; }
+    html:not([data-theme="dark"]) .filter-bar { background: #f5f5f7 !important; border-bottom: 1px solid rgba(0,0,0,0.08) !important; }
+    html:not([data-theme="dark"]) .filter-btn { border-color: rgba(0,0,0,0.15) !important; color: rgba(0,0,0,0.45) !important; background: #fff !important; }
+    html:not([data-theme="dark"]) .filter-btn.active { background: #0078ff !important; color: #fff !important; border-color: #0078ff !important; }
+    html:not([data-theme="dark"]) .filter-btn:hover:not(.active) { border-color: #0078ff !important; color: #0078ff !important; }
+    html:not([data-theme="dark"]) .products-section { background: #f5f5f7 !important; }
+    html:not([data-theme="dark"]) .product-card { background: #fff !important; border-color: rgba(0,0,0,0.08) !important; }
+    html:not([data-theme="dark"]) .product-card:hover { border-color: rgba(0,120,255,0.4) !important; box-shadow: 0 20px 60px rgba(0,120,255,0.1) !important; }
+    html:not([data-theme="dark"]) .card-img-wrap { background: #f0f0f0 !important; }
+    html:not([data-theme="dark"]) .card-name { color: #111 !important; }
+    html:not([data-theme="dark"]) .card-desc { color: rgba(0,0,0,0.45) !important; }
+    html:not([data-theme="dark"]) .card-price { background: linear-gradient(90deg, #0078ff, #00c8ff) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    html:not([data-theme="dark"]) .card-badge { background: linear-gradient(90deg, #0078ff, #00c8ff) !important; }
+    html:not([data-theme="dark"]) footer { background: #e8e8ed !important; border-top: 1px solid rgba(0,0,0,0.08) !important; }
+    html:not([data-theme="dark"]) .footer-heading { color: #111 !important; }
+    html:not([data-theme="dark"]) .footer-content { color: #333 !important; }
+    html:not([data-theme="dark"]) .footer-content .divider { color: rgba(0,0,0,0.2) !important; }
+    html:not([data-theme="dark"]) #theme-toggle { background: #111 !important; color: #fff !important; }
+
+    /* ── Theme Toggle Button ── */
+    #theme-toggle {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 22px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+      background: #fff;
+      color: #111;
+    }
+    [data-theme="dark"] #theme-toggle { background: #222; color: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    #theme-toggle:hover { transform: scale(1.12); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">
+      <svg class="logo-icon" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="38" height="38" rx="10" fill="#222"/>
+        <path d="M19 8 C13 8 10 13 10 19 C10 25 13 30 19 30 C22 30 24 28 25 26 C26 28 27 30 30 30 L27 24 C28 22 28 20 28 19 C28 13 25 8 19 8Z" fill="white"/>
+        <circle cx="16" cy="18" r="2.2" fill="#222"/>
+        <circle cx="22" cy="18" r="2.2" fill="#222"/>
+      </svg>
+      <span class="logo-text">NEXLAP</span>
+    </a>
+    <div class="nav-center">
+      <a href="index.html">Mac</a>
+      <a href="ipad.html">iPad</a>
+      <a href="iphone.html" class="active">iPhone</a>
+      <a href="Watch.html">Watch</a>
+    </div>
+    <div class="nav-right">
+      <a href="cart.html" class="cart-btn">Cart</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <span class="hero-tag">New Collection 2026</span>
+    <h1 class="hero-title">iPhone</h1>
+    <p class="hero-sub">Forged from titanium. Powered by A18 Pro. The most personal device you'll ever own.</p>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <button class="filter-btn active">New Products</button>
+    <button class="filter-btn">Special Offers</button>
+  </div>
+
+  <!-- Products -->
+  <div class="products-section">
+
+    <div class="product-card">
+      <div class="card-badge">New</div>
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 16 Pro Max</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$1,199</span>
+        <button class="add-to-cart" data-name="iPhone 16 Pro Max" data-price="1199" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge">New</div>
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 16 Pro</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$999</span>
+        <button class="add-to-cart" data-name="iPhone 16 Pro" data-price="999" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 16 Plus</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$899</span>
+        <button class="add-to-cart" data-name="iPhone 16 Plus" data-price="899" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 16</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$799</span>
+        <button class="add-to-cart" data-name="iPhone 16" data-price="799" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 15 Pro Max</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$999</span>
+        <button class="add-to-cart" data-name="iPhone 15 Pro Max" data-price="999" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 15 Pro</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$849</span>
+        <button class="add-to-cart" data-name="iPhone 15 Pro" data-price="849" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 15</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$699</span>
+        <button class="add-to-cart" data-name="iPhone 15" data-price="699" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge">Deal</div>
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 14 Pro Max</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$599</span>
+        <button class="add-to-cart" data-name="iPhone 14 Pro Max" data-price="599" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge">Deal</div>
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone 14</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$499</span>
+        <button class="add-to-cart" data-name="iPhone 14" data-price="499" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="card-badge">Deal</div>
+      <div class="card-img-wrap">
+        <img src="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" alt="iPhone">
+      </div>
+      <div class="card-body">
+        <p class="card-name">iPhone SE 3rd Gen</p>
+        <p class="card-desc">M4 chip, Ultra Retina XDR display, perfect for pro workflows.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-price">$399</span>
+        <button class="add-to-cart" data-name="iPhone SE 3rd Gen" data-price="399" data-img="/Users/moustafaalbeik/Documents/NexLap/images/Iphone-1.jpg" onclick="addToCart(this)">Add to cart</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-heading">Get in touch</p>
+    <div class="footer-content">
+      <span>📧 info@nexlap.com</span>
+      <span class="divider">|</span>
+      <span>📱 +1 (800) 123-4567</span>
+      <span class="divider">|</span>
+      <span>📍 123 Tech Street, San Francisco, CA</span>
+      <span class="divider">|</span>
+      <span>© 2026 NexLap. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    function addToCart(btn) {
+      const name = btn.getAttribute('data-name');
+      const price = parseInt(btn.getAttribute('data-price'));
+      const img = btn.getAttribute('data-img');
+
+      let cart = JSON.parse(localStorage.getItem('nexlap-cart') || '[]');
+      const existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ name, price, img, qty: 1 });
+      }
+      localStorage.setItem('nexlap-cart', JSON.stringify(cart));
+
+      const original = btn.textContent;
+      btn.textContent = '✓ Added!';
+      btn.style.background = 'linear-gradient(90deg, #0078ff, #00c8ff)';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+      }, 1000);
+    }
+  </script>
+
+
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+    <span id="theme-icon">🌙</span>
+  </button>
+
+  <script>
+    (function() {
+      const saved = localStorage.getItem('nexlap-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', saved);
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+    })();
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('nexlap-theme', next);
+      document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+    }
+  </script>
+
+</body>
+</html>
